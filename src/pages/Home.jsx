@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import qs from 'qs'
@@ -11,8 +11,8 @@ import PizzaBlock from '../components/PizzaBlock'
 import Pagination from '../components/Pagination'
 import { list } from '../components/Sort'
 
-import { setFilters } from '../redux/slices/filterSlice'
-import { fetchPizzas } from '../redux/slices/pizzaSlice'
+import { selectFilter, setFilters } from '../redux/slices/filterSlice'
+import { fetchPizzas, selectPizza } from '../redux/slices/pizzaSlice'
 
 const Home = () => {
   const dispatch = useDispatch()
@@ -20,10 +20,8 @@ const Home = () => {
   const isSearch = useRef(false)
   const isMounted = useRef(false)
 
-  const { categoryId, sort, currentPage } = useSelector((state) => state.filter)
-  const { items, status } = useSelector((state) => state.pizza)
-
-  const { searchValue } = useContext(SearchContext)
+  const { searchValue, categoryId, sort, currentPage } = useSelector(selectFilter)
+  const { items, status } = useSelector(selectPizza)
 
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />)
   const pizzas = items
