@@ -1,7 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import axios from 'axios'
 import qs from 'qs'
 
 import { SearchContext } from '../App'
@@ -13,6 +12,7 @@ import Pagination from '../components/Pagination'
 import { list } from '../components/Sort'
 
 import { setFilters } from '../redux/slices/filterSlice'
+import { fetchPizzas } from '../redux/slices/pizzaSlice'
 
 const Home = () => {
   const dispatch = useDispatch()
@@ -21,9 +21,9 @@ const Home = () => {
   const isMounted = useRef(false)
 
   const { categoryId, sort, currentPage } = useSelector((state) => state.filter)
+  const { items, status } = useSelector((state) => state.pizza)
+
   const { searchValue } = useContext(SearchContext)
-  const [items, setItems] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
 
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />)
   const pizzas = items
@@ -35,22 +35,23 @@ const Home = () => {
     })
     .map((item) => <PizzaBlock key={item.id} {...item} />)
 
-  const fetchPizzas = () => {
-    setIsLoading(true)
-
+  const getPizzas = async () => {
     const category = categoryId > 0 ? `category=${categoryId}` : ''
     const search = searchValue ? `&search=${searchValue}` : ''
     const sortBy = sort.sortProperty.replace('-', '')
     const order = sort.sortProperty.includes('-') ? 'asc' : 'desc'
 
-    axios
-      .get(
-        `https://628ba2c37886bbbb37bc9a31.mockapi.io/items?page=${currentPage}&limit=4&${category}${search}&sortBy=${sortBy}&order=${order}`
-      )
-      .then((response) => {
-        setItems(response.data)
-        setIsLoading(false)
+    dispatch(
+      fetchPizzas({
+        category,
+        search,
+        sortBy,
+        order,
+        currentPage,
       })
+    )
+
+    window.scrollTo(0, 0)
   }
 
   useEffect(() => {
@@ -85,7 +86,7 @@ const Home = () => {
     window.scrollTo(0, 0)
 
     if (!isSearch.current) {
-      fetchPizzas()
+      getPizzas()
     }
 
     isSearch.current = false
@@ -98,7 +99,18 @@ const Home = () => {
         <Sort />
       </div>
       <h2 className='content__title'>Все пиццы</h2>
-      <div className='content__items'>{isLoading ? skeletons : pizzas}</div>
+      {status === 'error' ? (
+        <div className='content__error-info'>
+          <h2>
+            Произошла ошибка <icon>😕</icon>
+          </h2>
+          <p>
+            К сожалению, не удалось получить пиццы. Попробуйте повторить попытку позже.
+          </p>
+        </div>
+      ) : (
+        <div className='content__items'>{status === 'loading' ? skeletons : pizzas}</div>
+      )}
       <Pagination />
     </div>
   )
