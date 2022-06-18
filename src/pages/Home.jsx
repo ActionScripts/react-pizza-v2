@@ -1,9 +1,8 @@
-import { useContext, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import qs from 'qs'
 
-import { SearchContext } from '../App'
 import Categories from '../components/Categories'
 import Sort from '../components/Sort'
 import Skeleton from '../components/PizzaBlock/Skeleton'
@@ -31,7 +30,11 @@ const Home = () => {
       }
       return false
     })
-    .map((item) => <PizzaBlock key={item.id} {...item} />)
+    .map((obj) => (
+      <Link key={obj.id} to={`/pizza/${obj.id}`}>
+        <PizzaBlock {...obj} />
+      </Link>
+    ))
 
   const getPizzas = async () => {
     const category = categoryId > 0 ? `category=${categoryId}` : ''
