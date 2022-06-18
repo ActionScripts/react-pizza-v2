@@ -29,11 +29,12 @@ const Sort: FC = () => {
   }
 
   useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      if (!event.path.includes(sortRef.current)) {
+    const handleClickOutside = (event: Event) => {
+      if (sortRef.current && !event.composedPath().includes(sortRef.current)) {
         setOpen(false)
       }
     }
+
     document.body.addEventListener('click', handleClickOutside)
     return () => document.body.removeEventListener('click', handleClickOutside)
   }, [])
