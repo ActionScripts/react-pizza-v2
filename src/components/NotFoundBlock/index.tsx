@@ -1,6 +1,7 @@
+import { FC } from 'react'
 import styles from './NotFoundBlock.module.scss'
 
-const NotFoundBlock = () => {
+const NotFoundBlock: FC = () => {
   return (
     <div className={styles.root}>
       <h1>

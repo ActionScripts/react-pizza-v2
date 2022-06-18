@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import qs from 'qs'
@@ -13,7 +13,7 @@ import { list } from '../components/Sort'
 import { selectFilter, setFilters } from '../redux/slices/filterSlice'
 import { fetchPizzas, selectPizza } from '../redux/slices/pizzaSlice'
 
-const Home = () => {
+const Home: FC = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const isSearch = useRef(false)
@@ -24,13 +24,13 @@ const Home = () => {
 
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />)
   const pizzas = items
-    .filter((obj) => {
+    .filter((obj: any) => {
       if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
         return true
       }
       return false
     })
-    .map((obj) => (
+    .map((obj: any) => (
       <Link key={obj.id} to={`/pizza/${obj.id}`}>
         <PizzaBlock {...obj} />
       </Link>
@@ -43,6 +43,7 @@ const Home = () => {
     const order = sort.sortProperty.includes('-') ? 'asc' : 'desc'
 
     dispatch(
+      // @ts-ignore
       fetchPizzas({
         category,
         search,
@@ -103,7 +104,7 @@ const Home = () => {
       {status === 'error' ? (
         <div className='content__error-info'>
           <h2>
-            Произошла ошибка <icon>😕</icon>
+            Произошла ошибка <span>😕</span>
           </h2>
           <p>
             К сожалению, не удалось получить пиццы. Попробуйте повторить попытку позже.
