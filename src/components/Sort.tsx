@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, memo, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectSort, setSortType, SortPropertyEnum } from '../redux/slices/filterSlice'
 
@@ -16,7 +16,7 @@ export const list: ListItem[] = [
   { name: 'алфавиту (asc)', sortProperty: SortPropertyEnum.TITLE_ASC },
 ]
 
-const SortPopup: FC = () => {
+const SortPopup: FC = memo(() => {
   const dispatch = useDispatch()
   const sort = useSelector(selectSort)
   const sortRef = useRef<HTMLDivElement>(null)
@@ -43,7 +43,6 @@ const SortPopup: FC = () => {
     <div ref={sortRef} className='sort'>
       <div className='sort__label'>
         <svg
-          // style={{ transform: open && 'rotate(180deg)' }}
           width='10'
           height='6'
           viewBox='0 0 10 6'
@@ -75,6 +74,6 @@ const SortPopup: FC = () => {
       )}
     </div>
   )
-}
+})
 
 export default SortPopup
