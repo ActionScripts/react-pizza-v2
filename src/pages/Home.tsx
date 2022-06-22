@@ -1,17 +1,20 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, useCallback, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import qs from 'qs'
 
-import Categories from '../components/Categories'
-import Sort from '../components/Sort'
 import Skeleton from '../components/PizzaBlock/Skeleton'
+import Categories from '../components/Categories'
 import PizzaBlock from '../components/PizzaBlock'
 import Pagination from '../components/Pagination'
 import { list } from '../components/Sort'
+import Sort from '../components/Sort'
 
-import { selectFilter, setFilters } from '../redux/slices/filterSlice'
-import { fetchPizzas, SearchPizzaParams, selectPizza } from '../redux/slices/pizzaSlice'
+import { fetchPizzas } from '../redux/pizza/asyncActions'
+import { selectFilter } from '../redux/filter/selectors'
+import { SearchPizzaParams } from '../redux/pizza/types'
+import { selectPizza } from '../redux/pizza/selectors'
+import { setFilters } from '../redux/filter/slice'
 import { useAppDispatch } from '../redux/store'
 
 const Home: FC = () => {
@@ -33,7 +36,7 @@ const Home: FC = () => {
     })
     .map((obj: any) => <PizzaBlock key={obj.id} {...obj} />)
 
-  const getPizzas = async () => {
+  const getPizzas = useCallback(async () => {
     const category = categoryId > 0 ? `category=${categoryId}` : ''
     const search = searchValue ? `&search=${searchValue}` : ''
     const sortBy = sort.sortProperty.replace('-', '')
@@ -50,7 +53,7 @@ const Home: FC = () => {
     )
 
     window.scrollTo(0, 0)
-  }
+  }, [categoryId, currentPage, dispatch, searchValue, sort.sortProperty])
 
   useEffect(() => {
     if (isMounted.current) {
@@ -92,7 +95,7 @@ const Home: FC = () => {
     }
 
     isSearch.current = false
-  }, [categoryId, sort, searchValue, currentPage])
+  }, [categoryId, sort, searchValue, currentPage, getPizzas])
 
   return (
     <div className='container'>
