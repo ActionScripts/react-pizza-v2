@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux'
 
 import { selectCart } from '../redux/cart/selectors'
 import logo from '../assets/img/pizza-logo.svg'
-import Search from './Search'
+import { Search } from '../components'
 
-const Header: FC = () => {
+export const Header: FC = () => {
   const { totalPrice, items } = useSelector(selectCart)
   const totalCount = items.reduce((sum: number, item: any) => sum + item.count, 0)
   const location = useLocation()
@@ -77,5 +77,3 @@ const Header: FC = () => {
     </div>
   )
 }
-
-export default Header

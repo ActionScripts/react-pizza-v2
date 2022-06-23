@@ -5,7 +5,7 @@ import { RootState } from '../redux/store'
 
 const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые']
 
-const Categories: FC = memo(() => {
+export const Categories: FC = memo(() => {
   const categoryId = useSelector((state: RootState) => state.filter.categoryId)
   const dispatch = useDispatch()
 
@@ -32,5 +32,3 @@ const Categories: FC = memo(() => {
     </div>
   )
 })
-
-export default Categories

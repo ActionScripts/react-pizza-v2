@@ -19,7 +19,7 @@ export const list: ListItem[] = [
   { name: 'алфавиту (asc)', sortProperty: SortPropertyEnum.TITLE_ASC },
 ]
 
-const SortPopup: FC = memo(() => {
+export const Sort: FC = memo(() => {
   const dispatch = useDispatch()
   const sort = useSelector(selectSort)
   const sortRef = useRef<HTMLDivElement>(null)
@@ -78,5 +78,3 @@ const SortPopup: FC = memo(() => {
     </div>
   )
 })
-
-export default SortPopup
